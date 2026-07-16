@@ -1,57 +1,51 @@
-import streamlit as st
+import base64
+import io
 
-out = st.components.v2.component(
+import numpy as np
+import streamlit as st
+from PIL import Image
+
+
+_component = st.components.v2.component(
     "streamlit-image-overlay.streamlit_image_overlay",
     js="index-*.js",
     html='<div class="react-root"></div>',
 )
 
 
-def on_num_clicks_change():
-    """Callback function for when the number of clicks changes in the frontend."""
-    pass
+def streamlit_image_overlay(
+    image = None,
+    overlays = [],
+    key = None,
+    metadata = {"unit": "px"},
+):
+    # support image type is PIL and np.ndarray
+    if isinstance(image, Image.Image):
+        pass
+    elif isinstance(image, np.ndarray):
+        if image.dtype != np.uint8:
+            image = image.astype(np.uint8)
+        image = Image.fromarray(image)
+    else:
+        raise TypeError(f"Unsupported image type: {type(image)}")
 
+    buffer = io.BytesIO()
+    image.save(buffer, format="PNG")
+    width, height = image.size
 
-# Create a wrapper function for the component.
-#
-# This is an optional best practice. We could simply expose the component
-# function returned by `st.components.v2.component` and call it done.
-#
-# The wrapper allows us to customize our component's API: we can pre-process its
-# input args, post-process its output value, and add a docstring for users.
-def streamlit_image_overlay(name, key=None):
-    """Create a new instance of "streamlit_image_overlay".
-
-    Parameters
-    ----------
-    name: str
-        The name of the thing we're saying hello to. The component will display
-        the text "Hello, {name}!"
-    key: str or None
-        An optional key that uniquely identifies this component.
-
-    Returns
-    -------
-    int
-        The number of times the component's "Click Me" button has been clicked.
-        (This is the value passed to `Streamlit.setComponentValue` on the
-        frontend.)
-
-    """
-    # Call through to our private component function. Arguments we pass here
-    # will be sent to the frontend, where they'll be available in an "args"
-    # dictionary.
-    #
-    # "default" is a special argument that specifies the initial return
-    # value of the component before the user has interacted with it.
-    component_value = out(
-        name=name,
-        key=key,
-        default={"num_clicks": 0},
-        data={"name": name},
-        on_num_clicks_change=on_num_clicks_change,
+    imageBase64 = (
+        "data:image/png;base64,"
+        + base64.b64encode(buffer.getvalue()).decode("utf-8")
     )
 
-    # We could modify the value returned from the component if we wanted.
-    # There's no need to do this in our simple example - but it's an option.
-    return component_value
+    return _component(
+        key = key,
+        data = {
+            "image": imageBase64,
+            "imageWidth": width,
+            "imageHeight": height,
+            "particles": overlays,
+            "metadata": metadata,
+        },
+        default = None
+    )

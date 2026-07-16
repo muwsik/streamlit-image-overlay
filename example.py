@@ -1,28 +1,35 @@
 import streamlit as st
+
+from PIL import Image
+import numpy as np
+
 from streamlit_image_overlay import streamlit_image_overlay
 
-# Add some test code to play with the component while it's in development.
-# During development, we can run this just as we would any other Streamlit
-# app: `$ streamlit run streamlit_image_overlay/example.py`
+          
+uploadedImg = st.file_uploader("Choose image",
+    type = ["tif", "tiff", "png", "jpg", "jpeg" ]
+)
 
-st.subheader("Component with constant args")
+if uploadedImg is not None:
+    srcImage = Image.open(uploadedImg).convert("L")
 
-# Create an instance of our component with a constant `name` arg, and
-# print its output value.
-result = streamlit_image_overlay("World")
-st.markdown("You've clicked %s times!" % int(result["num_clicks"]))
+    particles = []
+    for i in range(50):
+        particles.append(
+            {
+                "id": i,
+                "x": np.random.randint(0, 500),
+                "y": np.random.randint(0, 500),
+                "diameter": np.random.uniform(5, 25),
+                "projectionArea": np.random.uniform(50, 500),
+                "volume": np.random.uniform(100, 2000),
+                "c0": np.random.randint(80, 255),
+                "approxError": np.random.uniform(0, 0.2),
+            }
+        )
 
-st.markdown("---")
-st.subheader("Component with variable args")
-
-# Create a second instance of our component whose `name` arg will vary
-# based on a text_input widget.
-#
-# We use the special "key" argument to assign a fixed identity to this
-# component instance. By default, when a component's arguments change,
-# it is considered a new instance and will be re-mounted on the frontend
-# and lose its current state. In this case, we want to vary the component's
-# "name" argument without having it get recreated.
-name_input = st.text_input("Enter a name", value="Streamlit")
-result = streamlit_image_overlay(name_input, key="foo")
-st.markdown("You've clicked %s times!" % int(result["num_clicks"]))
+    streamlit_image_overlay(
+        image = srcImage,
+        overlays = particles,
+        key = "main-imageViewer"                    
+    )
