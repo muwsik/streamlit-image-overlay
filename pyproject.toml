@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "streamlit-image-overlay"
-version = "1.0.0"
+version = "1.0.1"
 description = "Interactive image overlay component for Streamlit"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -42,4 +42,5 @@ include = ["streamlit_image_overlay*"]
 [tool.setuptools.package-data]
 streamlit_image_overlay = [
     "frontend/build/**/*",
+    "pyproject.toml"
 ]
