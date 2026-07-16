@@ -1,11 +1,14 @@
-# streamlit-image-overlay
+# Streamlit Image Overlay
+
 Interactive image overlay component for Streamlit
 
 ## License
 
-This project is licensed under the PolyForm Strict License 1.0.0.
+Permission is granted to use this software for personal,
+educational and research purposes.
 
-Commercial use, redistribution, modification, and creation of derivative works require prior written permission from the author.
+Commercial use, redistribution, modification, or creation
+of derivative works is prohibited without prior written
+permission from the copyright holder.
 
-For licensing inquiries, contact:
-nanoweb.assist@gmail.com
+For commercial licensing: muwsik@mail.ru
