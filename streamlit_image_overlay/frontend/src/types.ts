@@ -18,18 +18,18 @@ export interface TooltipPosition {
 }
 
 
-export interface ViewerMetadata {
+export interface OverlayMetadata {
     unit: string;
 }
 
-export interface ViewerState extends FrontendState {
+export interface OverlayState extends FrontendState {
 
 }
 
-export interface ViewerData {
+export interface OverlayData {
     image: string;
     imageWidth: number;
     imageHeight: number;
     particles: Particle[];
-    metadata: ViewerMetadata;
+    metadata: OverlayMetadata;
 }

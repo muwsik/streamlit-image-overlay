@@ -1,7 +1,7 @@
 ﻿import { FC, useRef, useState, useEffect, useLayoutEffect } from "react"
 import type { FrontendRendererArgs } from "@streamlit/component-v2-lib"
 
-import type { Particle, ViewerData, ViewerState, TooltipPosition } from "./types"
+import type { Particle, OverlayData, OverlayState, TooltipPosition } from "./types"
 
 import {
     containerStyle,
@@ -14,12 +14,12 @@ import {
 } from "./styles"
 
 
-export type ImageViewerProps =
+export type ImageOverlayProps =
     Pick<
-        FrontendRendererArgs<ViewerState, ViewerData>,
+        FrontendRendererArgs<OverlayState, OverlayData>,
         "setStateValue" | "setTriggerValue"
     > &
-    ViewerData
+    OverlayData
 
 
 //// Function
@@ -52,7 +52,7 @@ function calculateTooltipPosition(
 }
 
 
-const ImageViewer: FC<ImageViewerProps> = (props) => {
+const ImageOverlay: FC<ImageOverlayProps> = (props) => {
 
     const {
         image,
@@ -328,4 +328,4 @@ const ImageViewer: FC<ImageViewerProps> = (props) => {
     )
 }
 
-export default ImageViewer
+export default ImageOverlay

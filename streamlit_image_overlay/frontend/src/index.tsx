@@ -5,8 +5,8 @@ import {
 import { StrictMode } from "react";
 import { createRoot, Root } from "react-dom/client";
 
-import type { ViewerData, ViewerState } from "./types"
-import ImageViewer from "./imageViewer";
+import type { OverlayData, OverlayState } from "./types"
+import ImageOverlay from "./imageOverlay";
 
 // Handle the possibility of multiple instances of the component to keep track
 // of the React roots for each component instance.
@@ -14,8 +14,8 @@ const reactRoots: WeakMap<FrontendRendererArgs["parentElement"], Root> =
   new WeakMap();
 
 const MyComponentRoot: FrontendRenderer<
-    ViewerState,
-    ViewerData
+    OverlayState,
+    OverlayData
 > = (args) => {
     const { data, parentElement, setStateValue, setTriggerValue } = args;
 
@@ -50,7 +50,7 @@ const MyComponentRoot: FrontendRenderer<
 
     reactRoot.render(
         <StrictMode>
-            <ImageViewer
+            <ImageOverlay
                 image={image}
                 imageWidth={imageWidth}
                 imageHeight={imageHeight}
