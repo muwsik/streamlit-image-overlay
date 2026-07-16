@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "streamlit-image-overlay"
-version = "0.0.1"
+version = "1.0.0"
 description = "Interactive image overlay component for Streamlit"
 readme = "README.md"
 license = "LicenseRef-Proprietary"
-license-files = ["LICENSE"]
-requires-python = ">=3.10"
+license-files = ["LICENSE.mb"]
+requires-python = ">=3.12"
 authors = [{ name = "Muwsik", email = "nanoweb.assist@gmail.com" }]
-dependencies = ["streamlit >= 1.51"]
+dependencies = ["streamlit >= 1.55"]
 
 [project.optional-dependencies]
 devel = [
