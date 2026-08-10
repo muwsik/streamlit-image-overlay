@@ -6,6 +6,8 @@ import numpy as np
 from streamlit_image_overlay import streamlit_image_overlay
 
           
+st.set_page_config(page_title = "Test overlay", layout = "wide")
+
 uploadedImg = st.file_uploader("Choose image",
     type = ["tif", "tiff", "png", "jpg", "jpeg" ]
 )
@@ -36,27 +38,44 @@ if uploadedImg is not None:
             }
         )
 
-    streamlit_image_overlay(
-        image = srcImage,
-        overlays = overlays,
-        styles = {
-            "viewport": {
-                "width": "100%",
-                "height": "100%",
-            },
-            "tooltip": {
-                "background-color": "black",
-                "color": "white",
-                "border-radius": "10px",
-                "padding": "15px",
-                "font-size": "16px",
-                "white-space": "pre-line"
-            },
-            "circle": {
-                #"fill": "green",
-                "stroke": "green",
-                "stroke-width": 1,
-                #"opacity": 0.75,
+    with st.container(horizontal=True):
+        streamlit_image_overlay(
+            key = "test2",
+            image = srcImage,
+            overlays = overlays,
+            styles = {
+                "viewport": {
+                    "width": "100%",
+                    "height": "100%",
+                    "margin": "0 auto",
+                },
             }
-        }                    
-    )
+        )
+
+        streamlit_image_overlay(
+            key = "test",
+            image = srcImage,
+            overlays = overlays,
+            styles = {
+                "viewport": {
+                    "width": "100%",
+                    "height": "100%",
+                    "margin": "0 auto",
+                    "image-rendering": "smooth",
+                },
+                "tooltip": {
+                    "background-color": "black",
+                    "color": "white",
+                    "border-radius": "10px",
+                    "padding": "15px",
+                    "font-size": "16px",
+                    "white-space": "pre-line"
+                },
+                "circle": {
+                    #"fill": "green",
+                    "stroke": "green",
+                    "stroke-width": 5,
+                    #"opacity": 0.75,
+                }
+            }                    
+        )

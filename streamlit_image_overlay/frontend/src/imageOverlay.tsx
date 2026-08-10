@@ -1,8 +1,8 @@
 ﻿import { FC, useRef, useState, useEffect, useLayoutEffect } from "react"
 import type { FrontendRendererArgs } from "@streamlit/component-v2-lib"
 
-import type { 
-    Overlay, OverlayData, OverlayState, TooltipPosition,
+import { 
+    type Overlay, type OverlayData, type OverlayState, type TooltipPosition,
     tooltipStyle, viewportStyle
  } from "./types"
 
@@ -267,6 +267,9 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                     y = {0}
                     width = {image.width}
                     height = {image.height}
+                    style = {{
+                        imageRendering: "pixelated",
+                    }}
                 />
 
                 {overlays.map(renderOverlay)}
