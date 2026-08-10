@@ -17,14 +17,13 @@ SUPPORTED_STYLE_TYPES  = {
     "contour",
     "tooltip",
     "viewport",
-    "image",
 }
 
 def streamlit_image_overlay(
     image = None,
     overlays = [],
     styles = None,
-    key = None,
+    key = "overlay",
 ):
     # checking style types
     if styles is not None:
@@ -46,9 +45,8 @@ def streamlit_image_overlay(
         raise TypeError(f"Unsupported image type: {type(image)}")
 
     buffer = io.BytesIO()
-    image.save(buffer, format="PNG")
+    image.save(buffer, format = "PNG")
     width, height = image.size
-
     imageBase64 = (
         "data:image/png;base64,"
         + base64.b64encode(buffer.getvalue()).decode("utf-8")
@@ -57,9 +55,11 @@ def streamlit_image_overlay(
     return _component(
         key = key,
         data = {
-            "image": imageBase64,
-            "imageWidth": width,
-            "imageHeight": height,
+            "image": {
+                "src": imageBase64,
+                "width": width,
+                "height": height,
+            },
             "overlays": overlays,
             "styles": styles or {},
         },

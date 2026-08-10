@@ -1,22 +1,18 @@
 ﻿import { FC, useRef, useState, useEffect, useLayoutEffect } from "react"
 import type { FrontendRendererArgs } from "@streamlit/component-v2-lib"
 
-import type { Overlay, OverlayData, OverlayState, TooltipPosition } from "./types"
+import type { 
+    Overlay, OverlayData, OverlayState, TooltipPosition,
+    tooltipStyle, viewportStyle
+ } from "./types"
 
-import {
-    containerStyle,
-    svgStyle,
-    tooltipStyle,
-    viewportStyle
-} from "./styles"
 
 
 export type ImageOverlayProps =
     Pick<
         FrontendRendererArgs<OverlayState, OverlayData>,
         "setStateValue" | "setTriggerValue"
-    > &
-    OverlayData
+    > & OverlayData
 
 
 //// Function
@@ -48,16 +44,14 @@ function calculateTooltipPosition(
     }
 }
 
-
+//// Main
 const ImageOverlay: FC<ImageOverlayProps> = (props) => {
     const {
         image,
-        imageWidth,
-        imageHeight,
         overlays,
         styles,
     } = props
-
+    
     // Refs
     const viewportRef = useRef<HTMLDivElement>(null)
     const svgRef = useRef<SVGSVGElement>(null)
@@ -90,34 +84,8 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
         setSelectedOverlay(null)
     }
 
-    const renderOverlay = (overlay: Overlay) => {
-        switch (overlay.type) {
-            case "circle":
-                return (
-                    <circle
-                        key={overlay.id}
-                        cx={overlay.data.x}
-                        cy={overlay.data.y}
-                        r={overlay.data.radius}
-                        style = {{
-                            fill: "rgba(255, 255, 255, 0)",
-                            stroke: "white",
-                            strokeWidth: 1,
-                            ...styles.circle,
-                        }}
-                        onPointerEnter={(event) =>
-                            handleOverlayEnter(event, overlay)
-                        }
-                        onPointerLeave={hideTooltip}
-                    />
-                )
-
-            default:
-                return null
-        }
-    }
-
-    // View
+    
+    // View & overlay
     const [viewBox, setViewBox] = useState({
         x: 0,
         y: 0,
@@ -125,12 +93,38 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
         height: 100
     })
 
+    function renderOverlay(overlay: Overlay) {
+        switch (overlay.type) {
+            case "circle":
+                return (
+                    <circle
+                        key = {overlay.id}
+                        cx = {overlay.data.x}
+                        cy = {overlay.data.y}
+                        r = {overlay.data.radius}
+                        style = {{
+                            fill: "rgba(255, 255, 255, 0)",
+                            stroke: "white",
+                            strokeWidth: 1,
+                            ...styles.circle,
+                        }}
+                        onPointerEnter = {(event) =>
+                            handleOverlayEnter(event, overlay)
+                        }
+                        onPointerLeave = {hideTooltip}
+                    />
+                )
+            default:
+                return null
+        }
+    }
+
     function fitToWindow() {
         setViewBox({
             x: 0,
             y: 0,
-            width: imageWidth,
-            height: imageHeight
+            width: image.width,
+            height: image.height
         })
     }
 
@@ -155,13 +149,10 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
         rHeight: number
     ) {
         setViewBox(prev => {
-
             const imageX = prev.x + mouseX * prev.width / rWidth
             const imageY = prev.y + mouseY * prev.height / rHeight
-
             const width = prev.width * factor
             const height = prev.height * factor
-
             return {
                 x: imageX - mouseX * width / rWidth,
                 y: imageY - mouseY * height / rHeight,
@@ -181,26 +172,16 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
     })
 
     const handleWheel = (event: React.WheelEvent) => {
-
         event.preventDefault()
-
         const rect = viewportRef.current!.getBoundingClientRect()
-
         const mouseX = event.clientX - rect.left
         const mouseY = event.clientY - rect.top
-
-        const scaleFactor =
-            event.deltaY < 0
-                ? 1 / 1.1
-                : 1.1
-
+        const scaleFactor = event.deltaY < 0 ? 1 / 1.1 : 1.1
         zoomAt(mouseX, mouseY, scaleFactor, rect.width, rect.height)
     }
 
     const handleMouseDown = (event: React.MouseEvent) => {
-
         setIsDragging(true)
-
         setLastMouse({
             x: event.clientX,
             y: event.clientY
@@ -208,15 +189,10 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
     }
 
     const handleMouseMove = (event: React.MouseEvent) => {
-
         if (!isDragging)
             return
 
-        panBy(
-            event.clientX - lastMouse.x,
-            event.clientY - lastMouse.y
-        )
-
+        panBy(event.clientX - lastMouse.x, event.clientY - lastMouse.y)
         setLastMouse({
             x: event.clientX,
             y: event.clientY
@@ -230,18 +206,12 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
 
     // Initialize view when a new image is loaded
     useEffect(() => {
-
-        if (imageWidth <= 0 || imageHeight <= 0)
-            return
-
         fitToWindow()
-
-    }, [imageWidth, imageHeight])
+    }, [image.src, image.width, image.height])
 
 
     // Update tooltip position
     useLayoutEffect(() => {
-
         if (
             !selectedOverlay ||
             !tooltipRef.current ||
@@ -263,10 +233,7 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
             )
         )
 
-    }, [
-        selectedOverlay,
-        pointerPosition
-    ])
+    }, [selectedOverlay, pointerPosition])
 
 
     return (
@@ -277,37 +244,38 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                 ...styles.viewport,
             }}
 
-            onWheel={handleWheel}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onDoubleClick={fitToWindow}
+            onWheel = {handleWheel}
+            onMouseDown = {handleMouseDown}
+            onMouseMove = {handleMouseMove}
+            onMouseUp = {handleMouseUp}
+            onMouseLeave = {handleMouseUp}
+            onDoubleClick = {fitToWindow}
         >
-            <div style={containerStyle}>
-                <svg
-                    ref={svgRef}
-                    viewBox={`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
-                    preserveAspectRatio="xMidYMid meet"
-                    style={svgStyle}
-                >
-                    <image
-                        href={image}
-                        x={0}
-                        y={0}
-                        width={imageWidth}
-                        height={imageHeight}
-                        style={styles.image}
-                    />
+            <svg
+                ref = {svgRef}
+                viewBox = {`${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}`}
+                preserveAspectRatio = "xMidYMid meet"
+                style = {{                    
+                    display: "block",
+                    width: "100%",
+                    height: "100%"
+                }}
+            >
+                <image
+                    href = {image.src}
+                    x = {0}
+                    y = {0}
+                    width = {image.width}
+                    height = {image.height}
+                />
 
-                    {overlays.map(renderOverlay)}
-                </svg>
-            </div>
+                {overlays.map(renderOverlay)}
+            </svg>
 
             {selectedOverlay && (
                 <div
-                    ref={tooltipRef}
-                    style={{
+                    ref = {tooltipRef}
+                    style = {{
                         ...tooltipStyle,
                         ...styles.tooltip,
                         left: tooltipPosition.x,

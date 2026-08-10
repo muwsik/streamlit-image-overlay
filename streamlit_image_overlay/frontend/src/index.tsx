@@ -42,8 +42,6 @@ const MyComponentRoot: FrontendRenderer<
     // Here we are accessing the data passed from Streamlit on the Python side.
     const {
         image,
-        imageWidth,
-        imageHeight,
         overlays,
         styles,
     } = data;
@@ -52,10 +50,8 @@ const MyComponentRoot: FrontendRenderer<
         <StrictMode>
             <ImageOverlay
                 image = {image}
-                imageWidth = {imageWidth}
-                imageHeight = {imageHeight}
                 overlays = {overlays}
-                styles={styles}
+                styles = {styles}
                 setStateValue = {setStateValue}
                 setTriggerValue = {setTriggerValue}
             />

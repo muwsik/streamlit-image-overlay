@@ -14,10 +14,10 @@ if uploadedImg is not None:
     srcImage = Image.open(uploadedImg).convert("L")
 
     overlays = []
-    for i in range(5000):
+    for i in range(100):
         x = np.random.randint(0, 1200)
         y = np.random.randint(0, 800)
-        radius = np.random.uniform(2, 4)
+        radius = np.random.uniform(2, 20)
 
         overlays.append(
             {
@@ -30,8 +30,8 @@ if uploadedImg is not None:
                 },
                 "tooltip": (
                     f"ID: {i}\n"
-                    f"Center: ({x}, {y})\n"
-                    f"Radius: {radius:.2f}"
+                    f"Center: ({x}, {y}) px \n"
+                    f"Radius: {radius:.2f} px"
                 ),
             }
         )
@@ -39,13 +39,10 @@ if uploadedImg is not None:
     streamlit_image_overlay(
         image = srcImage,
         overlays = overlays,
-        key = "main-imageViewer",
         styles = {
             "viewport": {
-                #"background-color": "none",
-            },
-            "image": {
-                #"opacity": 0.1,
+                "width": "100%",
+                "height": "100%",
             },
             "tooltip": {
                 "background-color": "black",
@@ -53,12 +50,12 @@ if uploadedImg is not None:
                 "border-radius": "10px",
                 "padding": "15px",
                 "font-size": "16px",
-                #"whiteSpace": "pre-line"
+                "white-space": "pre-line"
             },
             "circle": {
                 #"fill": "green",
                 "stroke": "green",
-                "stroke-width": 3,
+                "stroke-width": 1,
                 #"opacity": 0.75,
             }
         }                    
