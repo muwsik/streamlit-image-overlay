@@ -12,13 +12,29 @@ _component = st.components.v2.component(
     html='<div class="react-root"></div>',
 )
 
+SUPPORTED_STYLE_TYPES  = {
+    "circle",
+    "contour",
+    "tooltip",
+    "viewport",
+    "image",
+}
 
 def streamlit_image_overlay(
     image = None,
     overlays = [],
+    styles = None,
     key = None,
-    metadata = {"unit": "px"},
 ):
+    # checking style types
+    if styles is not None:
+        unknownStyles = set(styles.keys()) - SUPPORTED_STYLE_TYPES
+
+        if unknownStyles:
+            raise ValueError(
+                f"Unsupported style types: {sorted(unknownStyles)}"
+            )
+    
     # support image type is PIL and np.ndarray
     if isinstance(image, Image.Image):
         pass
@@ -44,8 +60,8 @@ def streamlit_image_overlay(
             "image": imageBase64,
             "imageWidth": width,
             "imageHeight": height,
-            "particles": overlays,
-            "metadata": metadata,
+            "overlays": overlays,
+            "styles": styles or {},
         },
         default = None
     )

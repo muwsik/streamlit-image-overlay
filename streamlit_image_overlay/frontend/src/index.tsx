@@ -44,20 +44,20 @@ const MyComponentRoot: FrontendRenderer<
         image,
         imageWidth,
         imageHeight,
-        particles,
-        metadata,
+        overlays,
+        styles,
     } = data;
 
     reactRoot.render(
         <StrictMode>
             <ImageOverlay
-                image={image}
-                imageWidth={imageWidth}
-                imageHeight={imageHeight}
-                particles={particles}
-                metadata={metadata}
-                setStateValue={setStateValue}
-                setTriggerValue={setTriggerValue}
+                image = {image}
+                imageWidth = {imageWidth}
+                imageHeight = {imageHeight}
+                overlays = {overlays}
+                styles={styles}
+                setStateValue = {setStateValue}
+                setTriggerValue = {setTriggerValue}
             />
         </StrictMode>,
     );

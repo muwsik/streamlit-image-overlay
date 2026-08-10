@@ -1,15 +1,12 @@
 ﻿import { FC, useRef, useState, useEffect, useLayoutEffect } from "react"
 import type { FrontendRendererArgs } from "@streamlit/component-v2-lib"
 
-import type { Particle, OverlayData, OverlayState, TooltipPosition } from "./types"
+import type { Overlay, OverlayData, OverlayState, TooltipPosition } from "./types"
 
 import {
     containerStyle,
     svgStyle,
     tooltipStyle,
-    titleStyle,
-    rowStyle,
-    particleStyle,
     viewportStyle
 } from "./styles"
 
@@ -53,13 +50,12 @@ function calculateTooltipPosition(
 
 
 const ImageOverlay: FC<ImageOverlayProps> = (props) => {
-
     const {
         image,
         imageWidth,
         imageHeight,
-        particles,
-        metadata,
+        overlays,
+        styles,
     } = props
 
     // Refs
@@ -69,20 +65,20 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
 
 
     // Tooltip
-    const [selectedParticle, setSelectedParticle] = useState<Particle | null>(null)
+    const [selectedOverlay, setSelectedOverlay] = useState<Overlay | null>(null);
     const [tooltipPosition, setTooltipPosition] = useState<TooltipPosition>({ x: 0, y: 0 })
     const [pointerPosition, setPointerPosition] = useState<TooltipPosition>({ x: 0, y: 0 })
 
-    function handleParticleEnter(
-        event: React.PointerEvent<SVGCircleElement>,
-        particle: typeof particles[number]
+    function handleOverlayEnter(
+        event: React.PointerEvent<SVGElement>,
+        overlay: Overlay
     ) {
         if (!svgRef.current)
             return
 
         const container = viewportRef.current!.getBoundingClientRect()
 
-        setSelectedParticle(particle)
+        setSelectedOverlay(overlay)
 
         setPointerPosition({
             x: event.clientX - container.left,
@@ -91,9 +87,35 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
     }
 
     function hideTooltip() {
-        setSelectedParticle(null)
+        setSelectedOverlay(null)
     }
 
+    const renderOverlay = (overlay: Overlay) => {
+        switch (overlay.type) {
+            case "circle":
+                return (
+                    <circle
+                        key={overlay.id}
+                        cx={overlay.data.x}
+                        cy={overlay.data.y}
+                        r={overlay.data.radius}
+                        style = {{
+                            fill: "rgba(255, 255, 255, 0)",
+                            stroke: "white",
+                            strokeWidth: 1,
+                            ...styles.circle,
+                        }}
+                        onPointerEnter={(event) =>
+                            handleOverlayEnter(event, overlay)
+                        }
+                        onPointerLeave={hideTooltip}
+                    />
+                )
+
+            default:
+                return null
+        }
+    }
 
     // View
     const [viewBox, setViewBox] = useState({
@@ -221,7 +243,7 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
     useLayoutEffect(() => {
 
         if (
-            !selectedParticle ||
+            !selectedOverlay ||
             !tooltipRef.current ||
             !svgRef.current
         )
@@ -242,15 +264,18 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
         )
 
     }, [
-        selectedParticle,
+        selectedOverlay,
         pointerPosition
     ])
 
 
     return (
         <div
-            ref={viewportRef}
-            style={viewportStyle}
+            ref = {viewportRef}
+            style = {{
+                ...viewportStyle,
+                ...styles.viewport,
+            }}
 
             onWheel={handleWheel}
             onMouseDown={handleMouseDown}
@@ -272,56 +297,24 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                         y={0}
                         width={imageWidth}
                         height={imageHeight}
+                        style={styles.image}
                     />
 
-                    {particles.map((particle) => (
-                        <circle
-                            key={particle.id}
-                            cx={particle.x}
-                            cy={particle.y}
-                            r={particle.diameter / 2}
-                            {...particleStyle}
-                            onPointerEnter={(event) =>
-                                handleParticleEnter(event, particle)
-                            }
-                            onPointerLeave={hideTooltip}
-                        />
-                    ))}
+                    {overlays.map(renderOverlay)}
                 </svg>
             </div>
 
-            {selectedParticle && (
+            {selectedOverlay && (
                 <div
                     ref={tooltipRef}
                     style={{
                         ...tooltipStyle,
+                        ...styles.tooltip,
                         left: tooltipPosition.x,
-                        top: tooltipPosition.y
+                        top: tooltipPosition.y,
                     }}
                 >
-                    <div style={titleStyle}>
-                        Information
-                    </div>
-
-                    <div style={rowStyle}>
-                        Diameter: {selectedParticle.diameter.toFixed(1)} {metadata.unit}
-                    </div>
-
-                    <div style={rowStyle}>
-                        Area (projection): {selectedParticle.projectionArea.toFixed(1)} {metadata.unit}²
-                    </div>
-
-                    <div style={rowStyle}>
-                        Volume: {selectedParticle.volume.toFixed(1)} {metadata.unit}³
-                    </div>
-
-                    <div style={rowStyle}>
-                        Brightness: {selectedParticle.c0.toFixed(0)}
-                    </div>
-
-                    <div style={rowStyle}>
-                        Reliability: {(1 - selectedParticle.approxError).toFixed(2)}
-                    </div>
+                    {selectedOverlay.tooltip}
                 </div>
             )}
         </div>

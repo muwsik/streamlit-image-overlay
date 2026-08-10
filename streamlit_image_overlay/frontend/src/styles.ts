@@ -10,15 +10,6 @@ export const svgStyle = {
     height: "100%"
 }
 
-
-export const particleStyle = {
-    fill: "none",
-    stroke: "#00AA00",
-    strokeWidth: 1,
-    pointerEvents: "all" as const
-}
-
-
 export const tooltipStyle = {
     position: "absolute" as const,
     textAlign: "left" as const,
@@ -34,17 +25,6 @@ export const tooltipStyle = {
     boxShadow: "0 2px 6px rgba(0,0,0,0.5)",
     pointerEvents: "none" as const,
     zIndex: 1000
-}
-
-
-export const titleStyle = {
-    fontWeight: "bold" as const,
-    marginBottom: "4px"
-}
-
-
-export const rowStyle = {
-    margin: "2px 0"
 }
 
 export const viewportStyle = {

@@ -1,15 +1,20 @@
 import type { FrontendState } from "@streamlit/component-v2-lib";
+import type { CSSProperties } from "react";
 
-export interface Particle {
-    id: number;
-    x: number;
-    y: number;
-    diameter: number;
-    projectionArea: number;
-    volume: number;
-    c0: number;
-    approxError: number;
+
+export interface CircleOverlay {
+    id: string;
+    type: "circle";
+    data: {
+        x: number;
+        y: number;
+        radius: number;
+    };
+    tooltip: string;
 }
+
+
+export type Overlay = CircleOverlay;
 
 
 export interface TooltipPosition {
@@ -18,18 +23,22 @@ export interface TooltipPosition {
 }
 
 
-export interface OverlayMetadata {
-    unit: string;
-}
-
 export interface OverlayState extends FrontendState {
-
 }
+
 
 export interface OverlayData {
     image: string;
     imageWidth: number;
     imageHeight: number;
-    particles: Particle[];
-    metadata: OverlayMetadata;
+    overlays: Overlay[];
+    styles: ComponentStyles;
+}
+
+export interface ComponentStyles {
+    circle?: CSSProperties;
+    //contour?: CSSProperties;
+    tooltip?: CSSProperties;
+    viewport?: CSSProperties;
+    image?: CSSProperties;
 }
