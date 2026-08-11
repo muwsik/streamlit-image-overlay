@@ -114,6 +114,24 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                         onPointerLeave = {hideTooltip}
                     />
                 )
+            case "path":
+                return (
+                    <path
+                        key = {overlay.id}
+                        d = {overlay.data.d}
+                        fillRule = "evenodd"
+                        style = {{
+                            fill: "rgba(255, 255, 255, 0.25)",
+                            stroke: "white",
+                            strokeWidth: 1,
+                            ...styles.path,
+                        }}
+                        onPointerEnter = {(event) =>
+                            handleOverlayEnter(event, overlay)
+                        }
+                        onPointerLeave = {hideTooltip}
+                    />
+                )
             default:
                 return null
         }
@@ -275,7 +293,7 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                 {overlays.map(renderOverlay)}
             </svg>
 
-            {selectedOverlay && (
+            {selectedOverlay?.tooltip && (
                 <div
                     ref = {tooltipRef}
                     style = {{

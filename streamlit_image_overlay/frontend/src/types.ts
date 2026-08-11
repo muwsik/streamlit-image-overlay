@@ -12,11 +12,23 @@ export interface CircleOverlay {
         y: number;
         radius: number;
     };
-    tooltip: string;
+    tooltip?: string;
 }
 
 
-export type Overlay = CircleOverlay;
+export interface PathOverlay {
+    id: string
+    type: "path"
+    data: {
+        d: string;
+    }
+    tooltip?: string;
+}
+
+export type Overlay =
+    | CircleOverlay
+    | PathOverlay
+
 
 
 export interface TooltipPosition {
@@ -29,7 +41,7 @@ export interface ComponentStyles {
     tooltip?: CSSProperties;
     viewport?: CSSProperties;
     circle?: CSSProperties;
-    //contour?: CSSProperties;
+    path?: CSSProperties;
 }
 
 
@@ -72,7 +84,7 @@ export const tooltipStyle = {
 export const viewportStyle = {
     position: "relative" as const,
     width: "100%",
-    height: "85vh",
+    height: "100%",
     overflow: "hidden" as const,
     display: "flex",
     justifyContent: "center",
