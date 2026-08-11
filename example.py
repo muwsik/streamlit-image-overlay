@@ -3,9 +3,9 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 
-from streamlit_image_overlay import streamlit_image_overlay
+from streamlit_image_overlay import streamlit_image_overlay as overlay
 
-def randomCircle(_n, _size, _border):
+def randomCircle(_n, _size, _border, _class = "default",):
     overlaysCircle = []
     for i in range(_n):
         x = np.random.randint(0, _size[0])
@@ -16,6 +16,7 @@ def randomCircle(_n, _size, _border):
             {
                 "id": str(i),
                 "type": "circle",
+                "class": _class,
                 "data": {
                     "x": x,
                     "y": y,
@@ -24,14 +25,15 @@ def randomCircle(_n, _size, _border):
                 "tooltip": (
                     f"ID: {i}\n"
                     f"Center: ({x}, {y}) px \n"
-                    f"Radius: {radius:.2f} px"
+                    f"Radius: {radius:.2f} px\n"
+                    f"Class: {_class} "
                 ),
             }
         )
     return overlaysCircle
 
 
-def randomPath(_n, _size, _border, _holeCount = 1):
+def randomPath(_n, _size, _border, _holeCount = 1, _class = "default", ):
     overlaysPath = []
 
     for i in range(_n):
@@ -120,21 +122,21 @@ def randomPath(_n, _size, _border, _holeCount = 1):
 
             path += " Z"
 
-        overlaysPath.append(
-            {
-                "id": str(i),
-                "type": "path",
-                "data": {
-                    "d": path,
-                },
-                "tooltip": (
-                    f"ID: {i}\n"
-                    f"Center: ({x}, {y}) px\n"
-                    f"Radius: {radius:.2f} px\n"
-                    f"Holes: {_holeCount}"
-                ),
-            }
-        )
+        overlaysPath.append( {
+            "id": str(i),
+            "type": "path",
+            "class": _class,
+            "data": {
+                "d": path,
+            },
+            "tooltip": (
+                f"ID: {i}\n"
+                f"Center: ({x}, {y}) px\n"
+                f"Radius: {radius:.2f} px\n"
+                f"Holes: {_holeCount}\n"
+                f"Class: {_class}"
+            ),
+        } )
 
     return overlaysPath
 
@@ -149,26 +151,121 @@ uploadedImg = st.file_uploader("Choose image",
 if uploadedImg is not None:
     srcImage = Image.open(uploadedImg).convert("L")
     
-
-    with st.container(horizontal=True):
-        streamlit_image_overlay(
-                    key = "test3",
-                    image = srcImage,
-                    overlays = randomPath(5, (1200, 1000), (20, 150), 1),
-                )
-
-        streamlit_image_overlay(
-            key = "test2",
+    # path examples
+    with st.container(horizontal = True):
+        overlay(
+            key = "path-test1",
             image = srcImage,
-            overlays = randomPath(150, (1000, 800), (20, 50), 0),
+            overlays = randomPath(5, (1200, 1000), (50, 150), 1),
         )
 
-        streamlit_image_overlay(
-            key = "test",
+        overlay(
+            key = "path-test2",
             image = srcImage,
-            overlays = randomCircle(1000, (1000, 800), (2, 10)),
+            overlays = randomPath(150, (1000, 800), (20, 50), 0),
+            styles = {
+                "path": {
+                    "default": {
+                        "stroke": "blue",
+                        "stroke-width": 1,
+                    }
+                }
+            }    
+        )
+
+        overlay(
+            key = "path-test3",
+            image = srcImage,
+            overlays = 
+                randomPath(2, (500, 500), (100, 200), 2) 
+                +
+                randomPath(10, (1000, 800), (10, 20), 0, "bacteria", )                
+                +
+                randomPath(1, (1000, 1000), (100, 400), 2, "biofilm", )
+                ,
+            styles = {
+                "path": {
+                    "default": {
+                        "stroke": "blue",
+                        "stroke-width": 2,
+                    },
+                    "class": {
+                        "bacteria": {
+                            "stroke": "red",
+                            "stroke-width": 3,
+                        },
+                        "biofilm": {
+                            "stroke": "green",
+                            "stroke-width": 1,
+                        }
+                    }
+                }
+            }                
+        )
+
+    # circle examples
+    with st.container(horizontal = True):
+        overlay(
+            key = "circle-test1",
+            image = srcImage,
+            overlays = randomCircle(250, (1000, 1000), (10, 15)),
+        )
+
+        overlay(
+            key = "circle-test2",
+            image = srcImage,
+            overlays = randomCircle(150, (1000, 800), (20, 50)),
+            styles = {
+                "circle": {
+                    "default": {
+                        "stroke": "blue",
+                        "stroke-width": 1,
+                    }
+                }
+            }      
+        )
+
+        overlay(
+            key = "circle-test3",
+            image = srcImage,
+            overlays = 
+                randomCircle(100, (1000, 800), (10, 20))
+                +
+                randomCircle(10, (1000, 800), (50, 60), "large")
+                +
+                randomCircle(10, (1000, 800), (1, 5), "small")
+                ,
+            styles = {
+                "circle": {
+                    "default": {
+                        "stroke": "blue",
+                        "stroke-width": 2,
+                    },
+                    "class": {
+                        "large": {
+                            "stroke": "red",
+                            "stroke-width": 1,
+                        },                        
+                        "small": {
+                            "stroke": "yellow   ",
+                            "stroke-width": 3,
+                        }
+                    }
+                }
+            }                      
+        )
+
+    # styles examples
+    with st.container(horizontal = True):
+        overlay(
+            key = "styles-test1",
+            image = srcImage,
+            overlays = randomCircle(250, (1000, 1000), (10, 15)),
             styles = {
                 "viewport": {
+                    "width": "250px",
+                    "height": "250px",           
+                    "outline": "1px dotted #fff",
                 },
                 "tooltip": {
                     "background-color": "black",
@@ -178,11 +275,25 @@ if uploadedImg is not None:
                     "font-size": "16px",
                     "white-space": "pre-line"
                 },
-                "circle": {
-                    #"fill": "green",
-                    "stroke": "green",
-                    "stroke-width": 2,
-                    #"opacity": 0.75,
-                }
-            }                    
+            }
+        )
+
+        overlay(
+            key = "styles-test2",
+            image = srcImage,
+            overlays = randomCircle(250, (1000, 1000), (10, 15)),
+            styles = {
+                "viewport": {
+                    "width": "700px",                 
+                    "border": "5px dashed #fff",
+                    "outline": "5px dotted #555",
+                },
+                "tooltip": {
+                    "background-color": "white",
+                    "color": "black",
+                    "border-radius": "1px",
+                    "padding": "5px",
+                    "font-size": "10px",
+                },
+            }
         )

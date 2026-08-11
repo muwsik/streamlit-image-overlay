@@ -7,6 +7,7 @@ import type { CSSProperties } from "react";
 export interface CircleOverlay {
     id: string;
     type: "circle";
+    class: string;
     data: {
         x: number;
         y: number;
@@ -19,6 +20,7 @@ export interface CircleOverlay {
 export interface PathOverlay {
     id: string
     type: "path"
+    class: string;
     data: {
         d: string;
     }
@@ -37,11 +39,17 @@ export interface TooltipPosition {
 }
 
 
+export interface OverlayStyles {
+    default?: CSSProperties;
+    class?: Record<string, CSSProperties>;
+}
+
+
 export interface ComponentStyles {
     tooltip?: CSSProperties;
     viewport?: CSSProperties;
-    circle?: CSSProperties;
-    path?: CSSProperties;
+    circle?: OverlayStyles;
+    path?: OverlayStyles;
 }
 
 

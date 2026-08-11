@@ -106,7 +106,8 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                             fill: "rgba(255, 255, 255, 0)",
                             stroke: "white",
                             strokeWidth: 1,
-                            ...styles.circle,
+                            ...styles.circle?.default,
+                            ...styles.circle?.class?.[overlay.class],
                         }}
                         onPointerEnter = {(event) =>
                             handleOverlayEnter(event, overlay)
@@ -124,7 +125,8 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                             fill: "rgba(255, 255, 255, 0.25)",
                             stroke: "white",
                             strokeWidth: 1,
-                            ...styles.path,
+                            ...styles.path?.default,
+                            ...styles.path?.class?.[overlay.class],
                         }}
                         onPointerEnter = {(event) =>
                             handleOverlayEnter(event, overlay)
