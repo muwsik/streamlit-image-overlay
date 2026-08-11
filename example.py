@@ -260,7 +260,11 @@ if uploadedImg is not None:
         overlay(
             key = "styles-test1",
             image = srcImage,
-            overlays = randomCircle(250, (1000, 1000), (10, 15)),
+            overlays = 
+                randomCircle(250, (1000, 1000), (10, 15))
+                +                
+                randomPath(2, (1100, 1100), (100, 200), 0) 
+                ,
             styles = {
                 "viewport": {
                     "width": "250px",
