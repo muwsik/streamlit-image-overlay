@@ -94,8 +94,10 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
     })
 
     function renderOverlay(overlay: Overlay) {
+        const isHovered = selectedOverlay?.id === overlay.id
+
         switch (overlay.type) {
-            case "circle":
+            case "circle":          
                 return (
                     <circle
                         key = {overlay.id}
@@ -108,6 +110,14 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                             strokeWidth: 1,
                             ...styles.circle?.default,
                             ...styles.circle?.class?.[overlay.class],
+                            ...(isHovered && {
+                                strokeWidth: 
+                                    Number(
+                                        styles.circle?.class?.[overlay.class]?.strokeWidth ??
+                                        styles.circle?.default?.strokeWidth ??
+                                        1
+                                    ) * 2 + 1,
+                            }),
                         }}
                         onPointerEnter = {(event) =>
                             handleOverlayEnter(event, overlay)
@@ -115,7 +125,7 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                         onPointerLeave = {hideTooltip}
                     />
                 )
-            case "path":
+            case "path":    
                 return (
                     <path
                         key = {overlay.id}
@@ -127,6 +137,14 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                             strokeWidth: 1,
                             ...styles.path?.default,
                             ...styles.path?.class?.[overlay.class],
+                            ...(isHovered && {
+                                strokeWidth: 
+                                    Number(
+                                        styles.path?.class?.[overlay.class]?.strokeWidth ??
+                                        styles.path?.default?.strokeWidth ??
+                                        1
+                                    ) * 2 + 1,
+                            }),
                         }}
                         onPointerEnter = {(event) =>
                             handleOverlayEnter(event, overlay)

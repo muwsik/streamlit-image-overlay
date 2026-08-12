@@ -14,7 +14,7 @@ def randomCircle(_n, _size, _border, _class = "default",):
 
         overlaysCircle.append(
             {
-                "id": str(i),
+                "id": str(i) + _class,
                 "type": "circle",
                 "class": _class,
                 "data": {
@@ -123,7 +123,7 @@ def randomPath(_n, _size, _border, _holeCount = 1, _class = "default", ):
             path += " Z"
 
         overlaysPath.append( {
-            "id": str(i),
+            "id": str(i) + _class,
             "type": "path",
             "class": _class,
             "data": {
@@ -145,7 +145,7 @@ def randomPath(_n, _size, _border, _holeCount = 1, _class = "default", ):
 st.set_page_config(page_title = "Test overlay", layout = "wide")
 
 uploadedImg = st.file_uploader("Choose image",
-    type = ["tif", "tiff", "png", "jpg", "jpeg" ]
+    type = ["tif", "tiff", "png", "jpg", "jpeg", "bmp" ]
 )
 
 if uploadedImg is not None:
@@ -167,7 +167,7 @@ if uploadedImg is not None:
                 "path": {
                     "default": {
                         "stroke": "blue",
-                        "stroke-width": 1,
+                        "strokeWidth": 1,
                     }
                 }
             }    
@@ -187,16 +187,16 @@ if uploadedImg is not None:
                 "path": {
                     "default": {
                         "stroke": "blue",
-                        "stroke-width": 2,
+                        "strokeWidth": 2,
                     },
                     "class": {
                         "bacteria": {
                             "stroke": "red",
-                            "stroke-width": 3,
+                            "strokeWidth": 3,
                         },
                         "biofilm": {
                             "stroke": "green",
-                            "stroke-width": 1,
+                            "strokeWidth": 1,
                         }
                     }
                 }
@@ -219,7 +219,7 @@ if uploadedImg is not None:
                 "circle": {
                     "default": {
                         "stroke": "blue",
-                        "stroke-width": 1,
+                        "strokeWidth": 1,
                     }
                 }
             }      
@@ -239,16 +239,16 @@ if uploadedImg is not None:
                 "circle": {
                     "default": {
                         "stroke": "blue",
-                        "stroke-width": 2,
+                        "strokeWidth": 5,
                     },
                     "class": {
                         "large": {
                             "stroke": "red",
-                            "stroke-width": 1,
+                            "strokeWidth": 10,
                         },                        
                         "small": {
                             "stroke": "yellow   ",
-                            "stroke-width": 3,
+                            "strokeWidth": 3,
                         }
                     }
                 }
@@ -272,12 +272,12 @@ if uploadedImg is not None:
                     "outline": "1px dotted #fff",
                 },
                 "tooltip": {
-                    "background-color": "black",
+                    "backgroundColor": "black",
                     "color": "white",
-                    "border-radius": "10px",
+                    "borderRadius": "10px",
                     "padding": "15px",
-                    "font-size": "16px",
-                    "white-space": "pre-line"
+                    "fontSize": "16px",
+                    "whiteSpace": "pre-line"
                 },
             }
         )
