@@ -169,6 +169,12 @@ if uploadedImg is not None:
                     "default": {
                         "stroke": "blue",
                         "strokeWidth": 1,
+                    },
+                    "hover":
+                    {                    
+                        "fill": "rgba(0,0,0,0)",
+                        "strokeWidth": 2,
+                        "strokeDasharray": "1, 1",
                     }
                 }
             }    
@@ -221,7 +227,7 @@ if uploadedImg is not None:
                     "default": {
                         "stroke": "blue",
                         "strokeWidth": 1,
-                    }
+                    },
                 }
             }      
         )
