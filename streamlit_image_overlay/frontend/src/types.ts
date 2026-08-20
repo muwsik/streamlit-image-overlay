@@ -27,10 +27,10 @@ export interface PathOverlay {
     tooltip?: string;
 }
 
+
 export type Overlay =
     | CircleOverlay
     | PathOverlay
-
 
 
 export interface TooltipPosition {
@@ -42,11 +42,13 @@ export interface TooltipPosition {
 export interface OverlayStyles {
     default?: CSSProperties;
     class?: Record<string, CSSProperties>;
+    hover?: CSSProperties;
 }
 
 
 export interface ComponentStyles {
     tooltip?: CSSProperties;
+    help?: CSSProperties;
     viewport?: CSSProperties;
     circle?: OverlayStyles;
     path?: OverlayStyles;
@@ -65,11 +67,25 @@ export interface OverlayData {
     };
     overlays: Overlay[];
     styles: ComponentStyles;
+    showHelp: boolean;
 }
 
 
 
 // Default styles
+
+export const defaultHoverStyle = {
+    strokeWidth: 2,
+    fill: "rgba(255, 255, 255, 0.1)",
+}
+
+
+export const defaultOverlayStyle = {
+    fill: "rgba(255, 255, 255, 0)",
+    stroke: "white",
+    strokeWidth: 1,
+}
+
 
 export const tooltipStyle = {
     position: "absolute" as const,
@@ -102,4 +118,32 @@ export const viewportStyle = {
     touchAction: "none" as const,
     border: "1px solid #fff",
     outline: "1px solid #000",
+}
+
+
+export const helpIconStyle = {
+    position: "absolute" as const,
+    top: "8px",
+    right: "8px",
+    zIndex: 10,
+    cursor: "help",
+    color: "white",
+    fontSize: "16px",
+    lineHeight: 1,
+}
+
+
+export const helpStyle = {
+    position: "absolute" as const,
+    right: 0,
+    top: "24px",
+    minWidth: "180px",
+    whiteSpace: "pre-line",
+    background: "black",
+    color: "white",
+    borderRadius: "6px",
+    padding: "8px 10px",
+    fontSize: "12px",
+    lineHeight: "1.4",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.4)",
 }

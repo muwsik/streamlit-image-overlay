@@ -3,7 +3,7 @@ import type { FrontendRendererArgs } from "@streamlit/component-v2-lib"
 
 import { 
     type Overlay, type OverlayData, type OverlayState, type TooltipPosition,
-    tooltipStyle, viewportStyle
+    tooltipStyle, viewportStyle, defaultHoverStyle, defaultOverlayStyle, helpStyle, helpIconStyle
  } from "./types"
 
 
@@ -50,18 +50,22 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
         image,
         overlays,
         styles,
+        showHelp,
     } = props
-    
+
     // Refs
+
     const viewportRef = useRef<HTMLDivElement>(null)
     const svgRef = useRef<SVGSVGElement>(null)
     const tooltipRef = useRef<HTMLDivElement>(null)
 
 
     // Tooltip
+
     const [selectedOverlay, setSelectedOverlay] = useState<Overlay | null>(null);
     const [tooltipPosition, setTooltipPosition] = useState<TooltipPosition>({ x: 0, y: 0 })
     const [pointerPosition, setPointerPosition] = useState<TooltipPosition>({ x: 0, y: 0 })
+    const [showHelpTooltip, setShowHelpTooltip] = useState(false)
 
     function handleOverlayEnter(
         event: React.PointerEvent<SVGElement>,
@@ -86,6 +90,7 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
 
     
     // View & overlay
+
     const [viewBox, setViewBox] = useState({
         x: 0,
         y: 0,
@@ -105,18 +110,12 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                         cy = {overlay.data.y}
                         r = {overlay.data.radius}
                         style = {{
-                            fill: "rgba(255, 255, 255, 0)",
-                            stroke: "white",
-                            strokeWidth: 1,
+                            ...defaultOverlayStyle,
                             ...styles.circle?.default,
                             ...styles.circle?.class?.[overlay.class],
                             ...(isHovered && {
-                                strokeWidth: 
-                                    Number(
-                                        styles.circle?.class?.[overlay.class]?.strokeWidth ??
-                                        styles.circle?.default?.strokeWidth ??
-                                        1
-                                    ) * 2 + 1,
+                                ...defaultHoverStyle,
+                                ...styles.circle?.hover,
                             }),
                         }}
                         onPointerEnter = {(event) =>
@@ -132,18 +131,12 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                         d = {overlay.data.d}
                         fillRule = "evenodd"
                         style = {{
-                            fill: "rgba(255, 255, 255, 0.25)",
-                            stroke: "white",
-                            strokeWidth: 1,
+                            ...defaultOverlayStyle,
                             ...styles.path?.default,
                             ...styles.path?.class?.[overlay.class],
                             ...(isHovered && {
-                                strokeWidth: 
-                                    Number(
-                                        styles.path?.class?.[overlay.class]?.strokeWidth ??
-                                        styles.path?.default?.strokeWidth ??
-                                        1
-                                    ) * 2 + 1,
+                                ...defaultHoverStyle,
+                                ...styles.path?.hover,
                             }),
                         }}
                         onPointerEnter = {(event) =>
@@ -164,6 +157,7 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
             width: image.width,
             height: image.height
         })
+        setShowOverlays(true)
     }
 
     function panBy(dx: number, dy: number) {
@@ -187,10 +181,11 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
         rHeight: number
     ) {
         setViewBox(prev => {
+            const width = Math.min(prev.width * factor, image.width)
+            const height = prev.height * (width / prev.width)
             const imageX = prev.x + mouseX * prev.width / rWidth
             const imageY = prev.y + mouseY * prev.height / rHeight
-            const width = prev.width * factor
-            const height = prev.height * factor
+
             return {
                 x: imageX - mouseX * width / rWidth,
                 y: imageY - mouseY * height / rHeight,
@@ -202,23 +197,54 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
 
 
     // Mouse interaction
+
     const [isDragging, setIsDragging] = useState(false)
+    const [lastMouse, setLastMouse] = useState({x: 0, y: 0})
+    const [showOverlays, setShowOverlays] = useState(true)
 
-    const [lastMouse, setLastMouse] = useState({
-        x: 0,
-        y: 0
-    })
+    function handleWheel(event: WheelEvent) {
+        if (!viewportRef.current)
+            return
 
-    const handleWheel = (event: React.WheelEvent) => {
         event.preventDefault()
+
         const rect = viewportRef.current!.getBoundingClientRect()
         const mouseX = event.clientX - rect.left
         const mouseY = event.clientY - rect.top
         const scaleFactor = event.deltaY < 0 ? 1 / 1.1 : 1.1
+
         zoomAt(mouseX, mouseY, scaleFactor, rect.width, rect.height)
     }
 
+    useEffect(() => {
+        const viewport = viewportRef.current
+        if (!viewport)
+            return
+
+        viewport.addEventListener(
+            "wheel",
+            handleWheel,
+            { passive: false }
+        )
+
+        return () => {
+            viewport.removeEventListener(
+                "wheel",
+                handleWheel
+            )
+        }
+    }, [])
+
+    const handleContextMenu = (event: React.MouseEvent) => {
+        event.preventDefault()
+        setShowOverlays(prev => !prev)
+        setSelectedOverlay(null)
+    }
+
     const handleMouseDown = (event: React.MouseEvent) => {
+        if (event.button !== 0)
+            return
+
         setIsDragging(true)
         setLastMouse({
             x: event.clientX,
@@ -282,12 +308,12 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                 ...styles.viewport,
             }}
 
-            onWheel = {handleWheel}
             onMouseDown = {handleMouseDown}
             onMouseMove = {handleMouseMove}
             onMouseUp = {handleMouseUp}
             onMouseLeave = {handleMouseUp}
             onDoubleClick = {fitToWindow}
+            onContextMenu = {handleContextMenu}
         >
             <svg
                 ref = {svgRef}
@@ -310,10 +336,32 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                     }}
                 />
 
-                {overlays.map(renderOverlay)}
+                {showOverlays && overlays.map(renderOverlay)}
             </svg>
 
-            {selectedOverlay?.tooltip && (
+            {showHelp && (
+                <div
+                    style = {helpIconStyle}
+                    onPointerEnter = {() => setShowHelpTooltip(true)}
+                    onPointerLeave = {() => setShowHelpTooltip(false)}
+                >
+                    ⓘ
+                    {showHelpTooltip && (
+                        <div
+                            style = {helpStyle}
+                        >
+                            {
+                                "Left drag: move image\n" +
+                                "Wheel: zoom\n" +
+                                "Double click: fit image\n" +
+                                "Right click: show/hide overlays"
+                            }
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {showOverlays && selectedOverlay?.tooltip && (
                 <div
                     ref = {tooltipRef}
                     style = {{

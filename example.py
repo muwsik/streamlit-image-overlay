@@ -151,6 +151,7 @@ uploadedImg = st.file_uploader("Choose image",
 if uploadedImg is not None:
     srcImage = Image.open(uploadedImg).convert("L")
     
+
     # path examples
     with st.container(horizontal = True):
         overlay(
@@ -279,7 +280,8 @@ if uploadedImg is not None:
                     "fontSize": "16px",
                     "whiteSpace": "pre-line"
                 },
-            }
+            },
+            showHelp = False
         )
 
         overlay(
@@ -293,11 +295,11 @@ if uploadedImg is not None:
                     "outline": "5px dotted #555",
                 },
                 "tooltip": {
-                    "background-color": "white",
+                    "backgroundColor": "white",
                     "color": "black",
-                    "border-radius": "1px",
+                    "borderRadius": "1px",
                     "padding": "5px",
-                    "font-size": "10px",
+                    "fontSize": "10px",
                 },
             }
         )

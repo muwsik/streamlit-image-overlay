@@ -23,7 +23,7 @@ SUPPORTED_STYLE_TYPES  = {
     "circle",
     "path",
     "tooltip",
-    "viewport",
+    "viewport"
 }
 
 def validate_styles(_styles):
@@ -82,14 +82,15 @@ def validate_overlays(_overlays):
 
 _component = st.components.v2.component(
     "streamlit-image-overlay.streamlit_image_overlay",
-    js="index-*.js",
-    html='<div class="react-root"></div>',
+    js = "index-*.js",
+    html = '<div class="react-root"></div>',
 )
 
 def streamlit_image_overlay(
     image = None,
     overlays = None,
     styles = None,
+    showHelp = True,
     key = "overlay",
 ):   
     # support image type is PIL and np.ndarray
@@ -117,6 +118,7 @@ def streamlit_image_overlay(
             },
             "overlays": overlays,
             "styles": styles or {},
+            "showHelp": showHelp
         },
         default = None
     )
