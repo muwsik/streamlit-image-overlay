@@ -16,6 +16,14 @@ The component is designed for image analysis tasks where geometric objects need 
 * SVG paths with arbitrary geometry and holes
 * Image-coordinate-based overlay positioning
 
+## Installation
+
+Install the package from [PyPI](https://pypi.org/project/streamlit-image-overlay/):
+
+```bash
+pip install streamlit-image-overlay
+```
+
 ## Basic usage
 
 ```python
