@@ -3,7 +3,7 @@ import type { FrontendRendererArgs } from "@streamlit/component-v2-lib"
 
 import { 
     type Overlay, type OverlayData, type OverlayState, type TooltipPosition,
-    tooltipStyle, viewportStyle, defaultHoverStyle, defaultOverlayStyle, helpStyle, helpIconStyle
+    defaultTooltipStyle,  defaultViewportStyle, defaultHoverStyle, defaultOverlayStyle, helpStyle, helpIconStyle
  } from "./types"
 
 
@@ -102,7 +102,7 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
         const isHovered = selectedOverlay?.id === overlay.id
 
         switch (overlay.type) {
-            case "circle":          
+            case "circle":      
                 return (
                     <circle
                         key = {overlay.id}
@@ -111,11 +111,10 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                         r = {overlay.data.radius}
                         style = {{
                             ...defaultOverlayStyle,
-                            ...styles.circle?.default,
-                            ...styles.circle?.class?.[overlay.class],
+                            ...styles.circle?.[overlay.class]?.style,
                             ...(isHovered && {
                                 ...defaultHoverStyle,
-                                ...styles.circle?.hover,
+                                ...styles.circle?.[overlay.class]?.hover,
                             }),
                         }}
                         onPointerEnter = {(event) =>
@@ -132,11 +131,10 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                         fillRule = "evenodd"
                         style = {{
                             ...defaultOverlayStyle,
-                            ...styles.path?.default,
-                            ...styles.path?.class?.[overlay.class],
+                            ...styles.path?.[overlay.class]?.style,
                             ...(isHovered && {
                                 ...defaultHoverStyle,
-                                ...styles.path?.hover,
+                                ...styles.path?.[overlay.class]?.hover,
                             }),
                         }}
                         onPointerEnter = {(event) =>
@@ -304,7 +302,7 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
         <div
             ref = {viewportRef}
             style = {{
-                ...viewportStyle,
+                ...defaultViewportStyle,
                 ...styles.viewport,
             }}
 
@@ -365,7 +363,7 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                 <div
                     ref = {tooltipRef}
                     style = {{
-                        ...tooltipStyle,
+                        ...defaultTooltipStyle,
                         ...styles.tooltip,
                         left: tooltipPosition.x,
                         top: tooltipPosition.y,

@@ -39,10 +39,14 @@ export interface TooltipPosition {
 }
 
 
-export interface OverlayStyles {
-    default?: CSSProperties;
-    class?: Record<string, CSSProperties>;
+export interface OverlayClassStyle {
+    style?: CSSProperties;
     hover?: CSSProperties;
+}
+
+
+export interface OverlayStyles {
+    [className: string]: OverlayClassStyle;
 }
 
 
@@ -87,7 +91,7 @@ export const defaultOverlayStyle = {
 }
 
 
-export const tooltipStyle = {
+export const defaultTooltipStyle = {
     position: "absolute" as const,
     textAlign: "left" as const,
     whiteSpace: "nowrap" as const,
@@ -105,7 +109,7 @@ export const tooltipStyle = {
 }
 
 
-export const viewportStyle = {
+export const defaultViewportStyle = {
     position: "relative" as const,
     width: "100%",
     height: "100%",
@@ -130,6 +134,14 @@ export const helpIconStyle = {
     color: "white",
     fontSize: "16px",
     lineHeight: 1,
+    background: "rgba(0, 0, 0, 0.55)",
+    borderRadius: "50%",
+    width: "20px",
+    height: "20px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow: "0 1px 4px rgba(0, 0, 0, 0.5)",
 }
 
 

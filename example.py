@@ -149,73 +149,43 @@ uploadedImg = st.file_uploader("Choose image",
 )
 
 if uploadedImg is not None:
-    srcImage = Image.open(uploadedImg).convert("L")
+    srcImage = Image.open(uploadedImg).convert("L")   
     
-
-    # path examples
+    # Without style
     with st.container(horizontal = True):
         overlay(
             key = "path-test1",
             image = srcImage,
-            overlays = randomPath(5, (1200, 1000), (50, 150), 1),
+            overlays = randomPath(5, (1200, 1000), (50, 150), 1)
         )
 
+        overlay(
+            key = "circle-test1",
+            image = srcImage,
+            overlays = randomCircle(250, (1000, 1000), (10, 15))
+        )
+        
+    # Default style for all elements
+    with st.container(horizontal = True):
         overlay(
             key = "path-test2",
             image = srcImage,
             overlays = randomPath(150, (1000, 800), (20, 50), 0),
             styles = {
                 "path": {
-                    "default": {
-                        "stroke": "blue",
-                        "strokeWidth": 1,
-                    },
-                    "hover":
-                    {                    
-                        "fill": "rgba(0,0,0,0)",
-                        "strokeWidth": 2,
-                        "strokeDasharray": "1, 1",
-                    }
-                }
-            }    
-        )
-
-        overlay(
-            key = "path-test3",
-            image = srcImage,
-            overlays = 
-                randomPath(2, (500, 500), (100, 200), 2) 
-                +
-                randomPath(10, (1000, 800), (10, 20), 0, "bacteria", )                
-                +
-                randomPath(1, (1000, 1000), (100, 400), 2, "biofilm", )
-                ,
-            styles = {
-                "path": {
-                    "default": {
-                        "stroke": "blue",
-                        "strokeWidth": 2,
-                    },
-                    "class": {
-                        "bacteria": {
-                            "stroke": "red",
-                            "strokeWidth": 3,
-                        },
-                        "biofilm": {
+                    "default": {   
+                        "style": {
                             "stroke": "green",
                             "strokeWidth": 1,
+                        },
+                        "hover": {                    
+                            "fill": "rgba(255,255,255,0.5)",
+                            "strokeWidth": 2,
+                            "strokeDasharray": "2, 1",
                         }
                     }
                 }
-            }                
-        )
-
-    # circle examples
-    with st.container(horizontal = True):
-        overlay(
-            key = "circle-test1",
-            image = srcImage,
-            overlays = randomCircle(250, (1000, 1000), (10, 15)),
+            }    
         )
 
         overlay(
@@ -225,11 +195,62 @@ if uploadedImg is not None:
             styles = {
                 "circle": {
                     "default": {
-                        "stroke": "blue",
-                        "strokeWidth": 1,
-                    },
+                        "style": {
+                            "stroke": "green",
+                            "strokeWidth": 1,                    
+                        },
+                        "hover": {                    
+                            "fill": "rgba(0,0,0,0.5)",
+                            "strokeWidth": 5,
+                        }
+                    }
                 }
             }      
+        )
+
+    # Different style for different elements
+    with st.container(horizontal = True):
+        overlay(
+            key = "path-test3",
+            image = srcImage,
+            overlays = 
+                randomPath(2, (500, 500), (100, 200), 2) 
+                +
+                randomPath(10, (1000, 800), (10, 20), 0, "full")                
+                +
+                randomPath(1, (1000, 1000), (100, 400), 2, "hole")
+                ,
+            styles = {
+                "path": {                    
+                    "default": {
+                        "style": {
+                            "stroke": "blue",
+                            "strokeWidth": 2,
+                        },
+                        "hover": {                    
+                            "fill": "rgba(0,0,255,0.2)",
+                        }
+                    },
+                    "full": {                            
+                        "style": {
+                            "stroke": "red",
+                            "strokeWidth": 3,
+                        },
+                        "hover": {                    
+                            "fill": "rgba(255,0,0,0.3)",
+                        }
+                    },
+                    "hole": {                          
+                        "style": {
+                            "stroke": "green",
+                            "strokeWidth": 1,
+                        },
+                        "hover": {                    
+                            "fill": "rgba(0,255,0,0.1)",
+                        }
+                    }
+                }
+            }                
         )
 
         overlay(
@@ -245,67 +266,53 @@ if uploadedImg is not None:
             styles = {
                 "circle": {
                     "default": {
-                        "stroke": "blue",
-                        "strokeWidth": 5,
+                        "style": {
+                            "stroke": "blue",
+                            "strokeWidth": 5,
+                        },
+                        "hover": {                    
+                            "fill": "rgba(0,0,255,0.1)",
+                        }
                     },
-                    "class": {
-                        "large": {
+                    "large": {
+                        "style": {
                             "stroke": "red",
                             "strokeWidth": 10,
-                        },                        
-                        "small": {
-                            "stroke": "yellow   ",
-                            "strokeWidth": 3,
+                        }
+                    },                        
+                    "small": { 
+                        "hover": {                    
+                            "fill": "rgba(0,255,0,0.1)",
                         }
                     }
                 }
             }                      
         )
 
-    # styles examples
-    with st.container(horizontal = True):
-        overlay(
-            key = "styles-test1",
-            image = srcImage,
-            overlays = 
-                randomCircle(250, (1000, 1000), (10, 15))
-                +                
-                randomPath(2, (1100, 1100), (100, 200), 0) 
-                ,
-            styles = {
-                "viewport": {
-                    "width": "250px",
-                    "height": "250px",           
-                    "outline": "1px dotted #fff",
-                },
-                "tooltip": {
-                    "backgroundColor": "black",
-                    "color": "white",
-                    "borderRadius": "10px",
-                    "padding": "15px",
-                    "fontSize": "16px",
-                    "whiteSpace": "pre-line"
-                },
+    # Viewport and tooltips styles
+    overlay(
+        key = "styles-test1",
+        image = srcImage,
+        overlays = 
+            randomCircle(250, (1000, 1000), (10, 15))
+            +                
+            randomPath(2, (1100, 1100), (100, 200), 0) 
+            ,
+        styles = {
+            "viewport": {
+                "width": "250px",
+                "height": "250px",           
+                "outline": "5px dotted #fff",
+                "margin": "0 auto"
             },
-            showHelp = False
-        )
-
-        overlay(
-            key = "styles-test2",
-            image = srcImage,
-            overlays = randomCircle(250, (1000, 1000), (10, 15)),
-            styles = {
-                "viewport": {
-                    "width": "700px",                 
-                    "border": "5px dashed #fff",
-                    "outline": "5px dotted #555",
-                },
-                "tooltip": {
-                    "backgroundColor": "white",
-                    "color": "black",
-                    "borderRadius": "1px",
-                    "padding": "5px",
-                    "fontSize": "10px",
-                },
-            }
-        )
+            "tooltip": {
+                "backgroundColor": "black",
+                "color": "white",
+                "borderRadius": "10px",
+                "padding": "15px",
+                "fontSize": "16px",
+                "whiteSpace": "pre-line"
+            },
+        },
+        showHelp = False
+    )
