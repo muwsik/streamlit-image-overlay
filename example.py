@@ -5,6 +5,7 @@ import numpy as np
 
 from streamlit_image_overlay import streamlit_image_overlay as overlay
 
+
 def randomCircle(_n, _size, _border, _class = "default",):
     overlaysCircle = []
     for i in range(_n):
@@ -144,175 +145,170 @@ def randomPath(_n, _size, _border, _holeCount = 1, _class = "default", ):
 #### MAIN       
 st.set_page_config(page_title = "Test overlay", layout = "wide")
 
-uploadedImg = st.file_uploader("Choose image",
-    type = ["tif", "tiff", "png", "jpg", "jpeg", "bmp" ]
-)
+srcImage = Image.new(mode = 'RGB', size=(1000, 1000))   
 
-if uploadedImg is not None:
-    srcImage = Image.open(uploadedImg).convert("L")   
-    
-    # Without style
-    with st.container(horizontal = True):
-        overlay(
-            key = "path-test1",
-            image = srcImage,
-            overlays = randomPath(5, (1200, 1000), (50, 150), 1)
-        )
-
-        overlay(
-            key = "circle-test1",
-            image = srcImage,
-            overlays = randomCircle(250, (1000, 1000), (10, 15))
-        )
-        
-    # Default style for all elements
-    with st.container(horizontal = True):
-        overlay(
-            key = "path-test2",
-            image = srcImage,
-            overlays = randomPath(150, (1000, 800), (20, 50), 0),
-            styles = {
-                "path": {
-                    "default": {   
-                        "style": {
-                            "stroke": "green",
-                            "strokeWidth": 1,
-                        },
-                        "hover": {                    
-                            "fill": "rgba(255,255,255,0.5)",
-                            "strokeWidth": 2,
-                            "strokeDasharray": "2, 1",
-                        }
-                    }
-                }
-            }    
-        )
-
-        overlay(
-            key = "circle-test2",
-            image = srcImage,
-            overlays = randomCircle(150, (1000, 800), (20, 50)),
-            styles = {
-                "circle": {
-                    "default": {
-                        "style": {
-                            "stroke": "green",
-                            "strokeWidth": 1,                    
-                        },
-                        "hover": {                    
-                            "fill": "rgba(0,0,0,0.5)",
-                            "strokeWidth": 5,
-                        }
-                    }
-                }
-            }      
-        )
-
-    # Different style for different elements
-    with st.container(horizontal = True):
-        overlay(
-            key = "path-test3",
-            image = srcImage,
-            overlays = 
-                randomPath(2, (500, 500), (100, 200), 2) 
-                +
-                randomPath(10, (1000, 800), (10, 20), 0, "full")                
-                +
-                randomPath(1, (1000, 1000), (100, 400), 2, "hole")
-                ,
-            styles = {
-                "path": {                    
-                    "default": {
-                        "style": {
-                            "stroke": "blue",
-                            "strokeWidth": 2,
-                        },
-                        "hover": {                    
-                            "fill": "rgba(0,0,255,0.2)",
-                        }
-                    },
-                    "full": {                            
-                        "style": {
-                            "stroke": "red",
-                            "strokeWidth": 3,
-                        },
-                        "hover": {                    
-                            "fill": "rgba(255,0,0,0.3)",
-                        }
-                    },
-                    "hole": {                          
-                        "style": {
-                            "stroke": "green",
-                            "strokeWidth": 1,
-                        },
-                        "hover": {                    
-                            "fill": "rgba(0,255,0,0.1)",
-                        }
-                    }
-                }
-            }                
-        )
-
-        overlay(
-            key = "circle-test3",
-            image = srcImage,
-            overlays = 
-                randomCircle(100, (1000, 800), (10, 20))
-                +
-                randomCircle(10, (1000, 800), (50, 60), "large")
-                +
-                randomCircle(10, (1000, 800), (1, 5), "small")
-                ,
-            styles = {
-                "circle": {
-                    "default": {
-                        "style": {
-                            "stroke": "blue",
-                            "strokeWidth": 5,
-                        },
-                        "hover": {                    
-                            "fill": "rgba(0,0,255,0.1)",
-                        }
-                    },
-                    "large": {
-                        "style": {
-                            "stroke": "red",
-                            "strokeWidth": 10,
-                        }
-                    },                        
-                    "small": { 
-                        "hover": {                    
-                            "fill": "rgba(0,255,0,0.1)",
-                        }
-                    }
-                }
-            }                      
-        )
-
-    # Viewport and tooltips styles
+# Without style
+with st.container(horizontal = True):
     overlay(
-        key = "styles-test1",
+        key = "path-test1",
+        image = srcImage,
+        overlays = randomPath(5, (1000, 1000), (50, 150), 1)
+    )
+
+    overlay(
+        key = "circle-test1",
+        image = srcImage,
+        overlays = randomCircle(250, (1000, 1000), (10, 15))
+    )
+    
+# Default style for all elements
+with st.container(horizontal = True):
+    overlay(
+        key = "path-test2",
+        image = srcImage,
+        overlays = randomPath(150, (1000, 800), (20, 50), 0),
+        styles = {
+            "path": {
+                "default": {   
+                    "style": {
+                        "stroke": "green",
+                        "strokeWidth": 1,
+                    },
+                    "hover": {                    
+                        "fill": "rgba(255,255,255,0.5)",
+                        "strokeWidth": 2,
+                        "strokeDasharray": "2, 1",
+                    }
+                }
+            }
+        }    
+    )
+
+    overlay(
+        key = "circle-test2",
+        image = srcImage,
+        overlays = randomCircle(150, (1000, 800), (20, 50)),
+        styles = {
+            "circle": {
+                "default": {
+                    "style": {
+                        "stroke": "green",
+                        "strokeWidth": 1,                    
+                    },
+                    "hover": {                    
+                        "fill": "rgba(0,0,0,0.5)",
+                        "strokeWidth": 5,
+                    }
+                }
+            }
+        }      
+    )
+
+# Different style for different elements
+with st.container(horizontal = True):
+    overlay(
+        key = "path-test3",
         image = srcImage,
         overlays = 
-            randomCircle(250, (1000, 1000), (10, 15))
-            +                
-            randomPath(2, (1100, 1100), (100, 200), 0) 
+            randomPath(2, (500, 500), (100, 200), 2) 
+            +
+            randomPath(10, (1000, 800), (10, 20), 0, "full")                
+            +
+            randomPath(1, (1000, 1000), (100, 400), 2, "hole")
             ,
         styles = {
-            "viewport": {
-                "width": "250px",
-                "height": "250px",           
-                "outline": "5px dotted #fff",
-                "margin": "0 auto"
-            },
-            "tooltip": {
-                "backgroundColor": "black",
-                "color": "white",
-                "borderRadius": "10px",
-                "padding": "15px",
-                "fontSize": "16px",
-                "whiteSpace": "pre-line"
-            },
-        },
-        showHelp = False
+            "path": {                    
+                "default": {
+                    "style": {
+                        "stroke": "blue",
+                        "strokeWidth": 2,
+                    },
+                    "hover": {                    
+                        "fill": "rgba(0,0,255,0.3)",
+                    }
+                },
+                "full": {                            
+                    "style": {
+                        "stroke": "red",
+                        "strokeWidth": 3,
+                    },
+                    "hover": {                    
+                        "fill": "rgba(255,0,0,0.3)",
+                    }
+                },
+                "hole": {                          
+                    "style": {
+                        "stroke": "green",
+                        "strokeWidth": 1,
+                    },
+                    "hover": {                    
+                        "fill": "rgba(0,255,0,0.3)",
+                    }
+                }
+            }
+        }                
     )
+
+    overlay(
+        key = "circle-test3",
+        image = srcImage,
+        overlays = 
+            randomCircle(100, (1000, 800), (10, 20))
+            +
+            randomCircle(10, (1000, 800), (50, 60), "large")
+            +
+            randomCircle(10, (1000, 800), (1, 5), "small")
+            ,
+        styles = {
+            "circle": {
+                "default": {
+                    "style": {
+                        "stroke": "blue",
+                        "strokeWidth": 5,
+                    },
+                    "hover": {                    
+                        "fill": "rgba(0,0,255,0.1)",
+                    }
+                },
+                "large": {
+                    "style": {
+                        "stroke": "red",
+                        "strokeWidth": 10,
+                    }
+                },                        
+                "small": { 
+                    "hover": {                    
+                        "fill": "rgba(0,255,0,0.1)",
+                    }
+                }
+            }
+        }                      
+    )
+
+# Viewport and tooltips styles
+overlay(
+    key = "styles-test1",
+    image = srcImage,
+    overlays = 
+        randomCircle(250, (1000, 1000), (10, 15))
+        +                
+        randomPath(2, (1100, 1100), (100, 200), 0) 
+        ,
+    styles = {
+        "viewport": {
+            "width": "250px",
+            "height": "250px",           
+            "outline": "5px dotted #fff",
+            "margin": "0 auto"
+        },
+        "tooltip": {
+            "backgroundColor": "black",
+            "color": "white",
+            "borderRadius": "10px",
+            "padding": "15px",
+            "fontSize": "16px",
+            "whiteSpace": "pre-line"
+        },
+    },
+    help = """**Left click + drag**: move image\n**Mouse wheel**: zoom\n**Double click**: fit image\n**Right click**: show/hide overlays"""                        
+)

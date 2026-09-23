@@ -1,5 +1,6 @@
 ﻿import { FC, useRef, useState, useEffect, useLayoutEffect } from "react"
 import type { FrontendRendererArgs } from "@streamlit/component-v2-lib"
+import ReactMarkdown from "react-markdown";
 
 import { 
     type Overlay, type OverlayData, type OverlayState, type TooltipPosition,
@@ -50,7 +51,7 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
         image,
         overlays,
         styles,
-        showHelp,
+        help,
     } = props
 
     // Refs
@@ -337,7 +338,7 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                 {showOverlays && overlays.map(renderOverlay)}
             </svg>
 
-            {showHelp && (
+            {help && (
                 <div
                     style = {helpIconStyle}
                     onPointerEnter = {() => setShowHelpTooltip(true)}
@@ -345,15 +346,10 @@ const ImageOverlay: FC<ImageOverlayProps> = (props) => {
                 >
                     ⓘ
                     {showHelpTooltip && (
-                        <div
-                            style = {helpStyle}
-                        >
-                            {
-                                "Left drag: move image\n" +
-                                "Wheel: zoom\n" +
-                                "Double click: fit image\n" +
-                                "Right click: show/hide overlays"
-                            }
+                        <div style = {helpStyle}>
+                            <ReactMarkdown>
+                                {help}
+                            </ReactMarkdown>
                         </div>
                     )}
                 </div>

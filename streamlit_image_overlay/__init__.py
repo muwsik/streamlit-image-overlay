@@ -90,7 +90,7 @@ def streamlit_image_overlay(
     image = None,
     overlays = None,
     styles = None,
-    showHelp = True,
+    help = None,
     key = "overlay",
 ):   
     # support image type is PIL and np.ndarray
@@ -118,7 +118,7 @@ def streamlit_image_overlay(
             },
             "overlays": overlays,
             "styles": styles or {},
-            "showHelp": showHelp
+            "help": help
         },
         default = None
     )

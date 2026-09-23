@@ -71,7 +71,7 @@ export interface OverlayData {
     };
     overlays: Overlay[];
     styles: ComponentStyles;
-    showHelp: boolean;
+    help: string;
 }
 
 
@@ -149,7 +149,7 @@ export const helpStyle = {
     position: "absolute" as const,
     right: 0,
     top: "24px",
-    minWidth: "180px",
+    width: "max-content",
     whiteSpace: "pre-line",
     background: "black",
     color: "white",

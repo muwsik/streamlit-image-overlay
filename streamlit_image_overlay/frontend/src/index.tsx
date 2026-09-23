@@ -44,7 +44,7 @@ const MyComponentRoot: FrontendRenderer<
         image,
         overlays,
         styles,
-        showHelp,
+        help,
     } = data;
 
     reactRoot.render(
@@ -53,7 +53,7 @@ const MyComponentRoot: FrontendRenderer<
                 image = {image}
                 overlays = {overlays}
                 styles = {styles}
-                showHelp = {showHelp}
+                help = {help}
                 setStateValue = {setStateValue}
                 setTriggerValue = {setTriggerValue}
             />
